@@ -157,7 +157,13 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Root endpoint
+// Serve static files from React build in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the client/dist directory
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+}
+
+// API info endpoint (only for /api/ path)
 app.get('/api/', (req, res) => {
   res.json({
     success: true,
@@ -172,12 +178,8 @@ app.get('/api/', (req, res) => {
   });
 });
 
-// Serve static files from React build in production
+// Production: Handle React routing - catch all non-API routes and return React app
 if (process.env.NODE_ENV === 'production') {
-  // Serve static files from the client/dist directory
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-  
-  // Handle React routing - catch all non-API routes and return React app
   app.get('*', (req, res) => {
     // Only serve React app for non-API routes
     if (!req.path.startsWith('/api')) {
