@@ -5,9 +5,9 @@ const getApiBaseUrl = () => {
     return import.meta.env.VITE_API_BASE_URL;
   }
   
-  // If in production, use the production API URL
+  // If in production, use the same domain (since backend serves frontend)
   if (import.meta.env.PROD) {
-    return 'https://your-backend-app.onrender.com/api';
+    return '/api';
   }
   
   // Development fallback

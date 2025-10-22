@@ -1,23 +1,26 @@
 services:
-  # Backend API Service
+  # Full Stack Application (Frontend + Backend)
   - type: web
-    name: cherish-india-backend
+    name: cherish-india-fullstack
     env: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm run build
     startCommand: npm start
-    healthCheckPath: /api/health
+    publishPath: ./client/dist
+    staticPublishPath: ./client/dist
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 5000
+        value: 10000
       - key: MONGODB_URI
         fromDatabase:
           name: cherish-india-db
           property: connectionString
       - key: JWT_SECRET
         generateValue: true
+      - key: CLIENT_URL
+        value: https://cherish-india-fullstack.onrender.com
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: JWT_EXPIRE

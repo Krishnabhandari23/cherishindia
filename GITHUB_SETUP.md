@@ -39,13 +39,47 @@ git commit -m "Initial commit: Cherish India e-commerce application"
 
 ## Step 6: Connect Local Repository to GitHub
 
+First, update the username in the remote URL:
+
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/cherish-india-ecommerce.git
+git remote add origin https://github.com/Krishnabhandari23/cherishindia.git
 git branch -M main
 git push -u origin main
 ```
 
-**Replace `YOUR_USERNAME` with your actual GitHub username**
+**⚠️ IMPORTANT: GitHub Authentication**
+
+GitHub no longer accepts password authentication. You'll need a Personal Access Token (PAT):
+
+### Option A: Create Personal Access Token (Recommended)
+
+1. **Go to GitHub Settings**:
+   - Click your profile picture → Settings
+   - Scroll down to "Developer settings" (left sidebar)
+   - Click "Personal access tokens" → "Tokens (classic)"
+   - Click "Generate new token" → "Generate new token (classic)"
+
+2. **Configure Token**:
+   - Note: `Cherish India E-commerce deployment`
+   - Expiration: 90 days (or your preference)
+   - Scopes: Check ✅ **repo** (full repository access)
+   - Click "Generate token"
+
+3. **Copy and Save Token**:
+   - ⚠️ **IMPORTANT**: Copy the token immediately (you won't see it again)
+   - Save it securely
+
+4. **Use Token Instead of Password**:
+   - Username: `Krishnabhandari23`
+   - Password: **[Paste your Personal Access Token]**
+
+### Option B: Use Git Credential Manager (Alternative)
+
+```bash
+git config --global credential.helper manager-core
+```
+
+Then retry the push command and enter your PAT when prompted.
 
 ## Step 7: Verify Upload
 

@@ -158,7 +158,7 @@ app.get('/api/health', async (req, res) => {
 });
 
 // Root endpoint
-app.get('/', (req, res) => {
+app.get('/api/', (req, res) => {
   res.json({
     success: true,
     message: 'Welcome to Cherish India E-Commerce API',
@@ -172,14 +172,31 @@ app.get('/', (req, res) => {
   });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found',
-    path: req.originalUrl
+// Serve static files from React build in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the client/dist directory
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+  
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
   });
-});
+} else {
+  // Development root endpoint
+  app.get('/', (req, res) => {
+    res.json({
+      success: true,
+      message: 'Welcome to Cherish India E-Commerce API',
+      version: '1.0.0',
+      endpoints: {
+        auth: '/api/auth',
+        products: '/api/products',
+        orders: '/api/orders',
+        health: '/api/health'
+      }
+    });
+  });
+}
 
 // Global error handler
 app.use((error, req, res, next) => {

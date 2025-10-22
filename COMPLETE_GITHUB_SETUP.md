@@ -72,7 +72,7 @@ After creating the repository, GitHub will show you commands. Use these:
 
 ```powershell
 cd F:\cherishindia
-git remote add origin https://github.com/YOUR_USERNAME/cherish-india-ecommerce.git
+git remote add origin https://github.com/Krishnabhandari23/cherishindia.git
 git branch -M main
 git push -u origin main
 ```
@@ -80,8 +80,8 @@ git push -u origin main
 **🔑 Replace `YOUR_USERNAME` with your actual GitHub username**
 
 Example:
-- If your GitHub username is `johnsmith`, use:
-- `git remote add origin https://github.com/johnsmith/cherish-india-ecommerce.git`
+- If your GitHub username is `Krishnabhandari23`, use:
+- `git remote add origin https://github.com/Krishnabhandari23/cherishindia.git`
 
 ---
 
