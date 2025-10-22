@@ -157,7 +157,7 @@ export default function Home({ onNavigate }: HomeProps) {
                 <Truck className="h-8 w-8 text-purple-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Free Shipping</h3>
-              <p className="text-gray-600">Free shipping on orders over $50</p>
+              <p className="text-gray-600">Free shipping on orders over ₹999</p>
             </motion.div>
           </motion.div>
         </div>
@@ -273,10 +273,10 @@ export default function Home({ onNavigate }: HomeProps) {
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <span className="text-lg font-bold">${product.price}</span>
+                        <span className="text-lg font-bold">₹{product.price}</span>
                         {product.originalPrice > product.price && (
                           <span className="text-sm text-gray-500 line-through">
-                            ${product.originalPrice}
+                            ₹{product.originalPrice}
                           </span>
                         )}
                       </div>

@@ -120,15 +120,15 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
 
               {/* Price */}
               <div className="flex items-center space-x-4 mb-6">
-                <span className="text-3xl font-bold text-green-600">${product.price}</span>
+                <span className="text-3xl font-bold text-green-600">₹{product.price}</span>
                 {product.originalPrice > product.price && (
                   <span className="text-xl text-gray-500 line-through">
-                    ${product.originalPrice}
+                    ₹{product.originalPrice}
                   </span>
                 )}
                 {product.discount > 0 && (
                   <Badge className="bg-green-100 text-green-800">
-                    Save ${product.originalPrice - product.price}
+                    Save ₹{product.originalPrice - product.price}
                   </Badge>
                 )}
               </div>
@@ -226,7 +226,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                   <CardContent className="p-4">
                     <h3 className="font-semibold mb-2 line-clamp-2">{relatedProduct.name}</h3>
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold">${relatedProduct.price}</span>
+                      <span className="text-lg font-bold">₹{relatedProduct.price}</span>
                       <div className="flex items-center">
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                         <span className="text-sm ml-1">{relatedProduct.rating}</span>

@@ -209,10 +209,10 @@ export default function ProductList({ onNavigate }: ProductListProps) {
                     </p>
                     <div className="flex items-center justify-between mt-auto">
                       <div className="flex items-center space-x-2">
-                        <span className="text-lg font-bold">${product.price}</span>
+                        <span className="text-lg font-bold">₹{product.price}</span>
                         {product.originalPrice > product.price && (
                           <span className="text-sm text-gray-500 line-through">
-                            ${product.originalPrice}
+                            ₹{product.originalPrice}
                           </span>
                         )}
                       </div>

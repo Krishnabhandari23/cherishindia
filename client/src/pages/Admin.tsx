@@ -372,7 +372,7 @@ export default function Admin({ onNavigate }: AdminProps) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-gray-600">Revenue</p>
-                      <p className="text-2xl font-bold">${stats.revenue.toLocaleString()}</p>
+                      <p className="text-2xl font-bold">₹{stats.revenue.toLocaleString()}</p>
                     </div>
                     <div className="text-2xl">💰</div>
                   </div>
