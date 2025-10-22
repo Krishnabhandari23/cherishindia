@@ -117,7 +117,13 @@ app.use((req, res, next) => {
 // Handle preflight requests explicitly
 app.options('*', cors());
 
-// Routes
+// Serve static files from React build in production (BEFORE API routes)
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the client/dist directory
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+}
+
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
@@ -157,27 +163,6 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Serve static files from React build in production
-if (process.env.NODE_ENV === 'production') {
-  // Serve static files from the client/dist directory
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-}
-
-// API info endpoint (only for /api/ path)
-app.get('/api/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Welcome to Cherish India E-Commerce API',
-    version: '1.0.0',
-    endpoints: {
-      auth: '/api/auth',
-      products: '/api/products',
-      orders: '/api/orders',
-      health: '/api/health'
-    }
-  });
-});
-
 // Production: Handle React routing - catch all non-API routes and return React app
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
@@ -193,8 +178,22 @@ if (process.env.NODE_ENV === 'production') {
     }
   });
 } else {
-  // Development root endpoint
+  // Development endpoints
   app.get('/', (req, res) => {
+    res.json({
+      success: true,
+      message: 'Welcome to Cherish India E-Commerce API - Development',
+      version: '1.0.0',
+      endpoints: {
+        auth: '/api/auth',
+        products: '/api/products',
+        orders: '/api/orders',
+        health: '/api/health'
+      }
+    });
+  });
+
+  app.get('/api/', (req, res) => {
     res.json({
       success: true,
       message: 'Welcome to Cherish India E-Commerce API',
