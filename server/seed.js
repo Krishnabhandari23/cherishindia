@@ -468,6 +468,50 @@ const sampleUsers = [
 
 const MONGO = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cherishindia';
 
+}
+
+// Export seedDatabase function for auto-seeding
+async function seedDatabase() {
+  try {
+    // Don't clear existing data, just add products if none exist
+    const adminUser = await User.findOne({ role: 'admin' });
+    
+    // Create admin user if doesn't exist
+    let adminUserId;
+    if (!adminUser) {
+      const admin = new User({
+        name: 'Admin User',
+        email: 'admin@cherishindia.com',
+        password: 'admin123',
+        role: 'admin',
+        isEmailVerified: true
+      });
+      await admin.save();
+      adminUserId = admin._id;
+      console.log('👨‍💼 Created admin user');
+    } else {
+      adminUserId = adminUser._id;
+    }
+    
+    // Create products if none exist
+    const productCount = await Product.countDocuments();
+    if (productCount === 0) {
+      const productsWithCreator = sampleProducts.map(product => ({
+        ...product,
+        createdBy: adminUserId
+      }));
+      
+      const createdProducts = await Product.insertMany(productsWithCreator);
+      console.log(`📦 Created ${createdProducts.length} products`);
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Auto-seeding failed:', error);
+    throw error;
+  }
+}
+
 async function seed(){
   try {
     await mongoose.connect(MONGO, {useNewUrlParser:true, useUnifiedTopology:true});
@@ -511,3 +555,5 @@ async function seed(){
 }
 
 seed();
+
+module.exports = { seedDatabase };

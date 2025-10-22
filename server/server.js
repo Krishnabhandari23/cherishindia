@@ -237,6 +237,22 @@ mongoose.connect(MONGO, {
     console.log(`📁 Database: ${mongoose.connection.db.databaseName}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     
+    // Auto-seed database if no products exist
+    try {
+      const Product = require('./src/models/Product');
+      const productCount = await Product.countDocuments();
+      if (productCount === 0) {
+        console.log('🌱 No products found, seeding database...');
+        const { seedDatabase } = require('./seed');
+        await seedDatabase();
+        console.log('✅ Database seeded successfully');
+      } else {
+        console.log(`📦 Found ${productCount} products in database`);
+      }
+    } catch (seedError) {
+      console.error('⚠️  Auto-seeding failed:', seedError.message);
+    }
+    
     // Listen for connection events
     mongoose.connection.on('error', (err) => {
       console.error('❌ MongoDB connection error:', err);
