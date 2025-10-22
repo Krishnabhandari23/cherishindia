@@ -232,7 +232,7 @@ mongoose.connect(MONGO, {
   maxPoolSize: 10, // Maintain up to 10 socket connections
   // Note: older/deprecated mongoose options removed for compatibility
 })
-  .then(()=>{
+  .then(async ()=>{
     console.log('✅ MongoDB connected successfully');
     console.log(`📁 Database: ${mongoose.connection.db.databaseName}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
