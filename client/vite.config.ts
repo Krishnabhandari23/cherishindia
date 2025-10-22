@@ -6,14 +6,23 @@ let react;
 try {
   react = require('@vitejs/plugin-react').default;
 } catch (e) {
-  console.warn('React plugin not found, using basic config');
-  react = () => ({});
+  console.warn('React plugin not found, trying alternative...');
+  try {
+    react = require('@vitejs/plugin-react-swc').default;
+  } catch (e2) {
+    console.warn('No React plugin found, using esbuild jsx');
+    react = () => ({});
+  }
 }
 
 export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
   ],
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: 'react'
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

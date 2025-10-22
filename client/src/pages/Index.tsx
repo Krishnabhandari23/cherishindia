@@ -1,3 +1,5 @@
+import React from 'react';
+
 // This is a template for the welcome page, you must rewrite this file to your own homepage
 export default function WelcomePage() {
   return (
