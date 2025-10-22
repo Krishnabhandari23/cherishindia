@@ -5,13 +5,13 @@ const getApiBaseUrl = () => {
     return import.meta.env.VITE_API_BASE_URL;
   }
   
-  // If in production, use the same domain (since backend serves frontend)
-  if (import.meta.env.PROD) {
-    return '/api';
+  // If accessing from localhost (development), use local backend if available
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:5000/api';
   }
   
-  // Development fallback
-  return 'http://localhost:5000/api';
+  // For production deployment, use Render backend URL
+  return 'https://cherishindia.onrender.com/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
