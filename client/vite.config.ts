@@ -32,6 +32,9 @@ export default defineConfig(({ mode }) => ({
       }
     }
   },
+  css: {
+    postcss: process.env.NODE_ENV === 'production' ? {} : undefined,
+  },
   server: {
     port: 5174,
     host: true,
