@@ -4,7 +4,7 @@
   "description": "Cherish India E-Commerce Full Stack Application",
   "main": "server/server.js",
   "engines": {
-    "node": ">=18.0.0",
+    "node": "18.x || 20.x || 22.x",
     "npm": ">=8.0.0"
   },
   "scripts": {
