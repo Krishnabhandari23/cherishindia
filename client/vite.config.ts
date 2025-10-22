@@ -1,6 +1,14 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import path from 'path';
+
+// Try to import React plugin, fall back to basic config if not available
+let react;
+try {
+  react = require('@vitejs/plugin-react').default;
+} catch (e) {
+  console.warn('React plugin not found, using basic config');
+  react = () => ({});
+}
 
 export default defineConfig(({ mode }) => ({
   plugins: [
