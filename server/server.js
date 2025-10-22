@@ -31,7 +31,7 @@ const corsOptions = {
       process.env.CLIENT_URL,
       process.env.FRONTEND_URL,
       // Add your actual Render frontend URLs
-      'https://your-frontend-app.onrender.com',
+      'https://cherishindia.onrender.com',
       'https://cherish-india-frontend.onrender.com'
     ].filter(Boolean); // Remove undefined values
     
@@ -252,9 +252,9 @@ mongoose.connect(MONGO, {
     // Start server
     const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Server is running on port ${PORT}`);
-      console.log(`📍 Server URL: ${process.env.NODE_ENV === 'production' ? 'https://your-backend-app.onrender.com' : `http://localhost:${PORT}`}`);
-      console.log(`� API Base URL: ${process.env.NODE_ENV === 'production' ? 'https://your-backend-app.onrender.com/api' : `http://localhost:${PORT}/api`}`);
-      console.log(`� Health Check: ${process.env.NODE_ENV === 'production' ? 'https://your-backend-app.onrender.com/api/health' : `http://localhost:${PORT}/api/health`}`);
+      console.log(`📍 Server URL: ${process.env.NODE_ENV === 'production' ? 'https://cherishindia.onrender.com' : `http://localhost:${PORT}`}`);
+      console.log(`🌐 API Base URL: ${process.env.NODE_ENV === 'production' ? 'https://cherishindia.onrender.com/api' : `http://localhost:${PORT}/api`}`);
+      console.log(`💚 Health Check: ${process.env.NODE_ENV === 'production' ? 'https://cherishindia.onrender.com/api/health' : `http://localhost:${PORT}/api/health`}`);
     });
 
     // Graceful shutdown

@@ -20,14 +20,11 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CLIENT_URL
-        value: https://cherish-india-fullstack.onrender.com
+        value: https://cherishindia.onrender.com
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: JWT_EXPIRE
         value: 7d
-      - key: CLIENT_URL
-        fromService:
-          type: web
           name: cherish-india-frontend
           property: host
       - key: FRONTEND_URL
