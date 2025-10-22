@@ -177,9 +177,18 @@ if (process.env.NODE_ENV === 'production') {
   // Serve static files from the client/dist directory
   app.use(express.static(path.join(__dirname, '../client/dist')));
   
-  // Handle React routing, return all requests to React app
+  // Handle React routing - catch all non-API routes and return React app
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    // Only serve React app for non-API routes
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'API route not found',
+        path: req.originalUrl
+      });
+    }
   });
 } else {
   // Development root endpoint
