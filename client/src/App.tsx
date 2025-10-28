@@ -11,6 +11,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 // Components
 import Navbar from '@/components/Navbar';
 import CartSidebar from '@/components/CartSidebar';
+import Footer from '@/components/Footer';
 
 // Pages
 import Home from '@/pages/Home';
@@ -20,6 +21,7 @@ import Cart from '@/pages/Cart';
 import Checkout from '@/pages/Checkout';
 import Login from '@/pages/Login';
 import Admin from '@/pages/Admin';
+import Wishlist from '@/pages/Wishlist';
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -64,15 +66,18 @@ function AppContent() {
         return <Login onNavigate={handleNavigate} />;
       case 'admin':
         return <Admin onNavigate={handleNavigate} />;
+      case 'wishlist':
+        return <Wishlist onNavigate={handleNavigate} />;
       default:
         return <Home onNavigate={handleNavigate} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar onNavigate={handleNavigate} currentPage={currentPage} />
-      <main>{renderPage()}</main>
+      <main className="flex-1">{renderPage()}</main>
+      <Footer onNavigate={handleNavigate} />
       <CartSidebar onNavigate={handleNavigate} />
     </div>
   );

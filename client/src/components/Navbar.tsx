@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -20,9 +20,11 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
   const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const wishlistItems = useSelector((state: RootState) => state.wishlist.products);
   const searchQuery = useSelector((state: RootState) => state.products.filters.search);
 
   const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const wishlistItemsCount = wishlistItems.length;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setFilters({ search: e.target.value }));
@@ -88,6 +90,23 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
 
           {/* Right side actions */}
           <div className="flex items-center space-x-4">
+            {/* Wishlist */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative"
+                onClick={() => onNavigate('wishlist')}
+              >
+                <Heart className="h-5 w-5" />
+                {wishlistItemsCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center text-xs bg-pink-600">
+                    {wishlistItemsCount}
+                  </Badge>
+                )}
+              </Button>
+            </motion.div>
+
             {/* Cart */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
@@ -180,6 +199,38 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
               >
                 Products
               </Button>
+              <Button
+                variant="ghost"
+                className="w-full justify-start flex items-center"
+                onClick={() => {
+                  onNavigate('wishlist');
+                  setIsMenuOpen(false);
+                }}
+              >
+                <Heart className="h-4 w-4 mr-2" />
+                Wishlist
+                {wishlistItemsCount > 0 && (
+                  <Badge className="ml-auto bg-pink-600">
+                    {wishlistItemsCount}
+                  </Badge>
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full justify-start flex items-center"
+                onClick={() => {
+                  dispatch(toggleCart());
+                  setIsMenuOpen(false);
+                }}
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Cart
+                {cartItemsCount > 0 && (
+                  <Badge className="ml-auto">
+                    {cartItemsCount}
+                  </Badge>
+                )}
+              </Button>
               {user?.role === 'admin' && (
                 <Button
                   variant="ghost"
@@ -192,7 +243,23 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
                   Admin
                 </Button>
               )}
-              {!isAuthenticated && (
+              {isAuthenticated ? (
+                <div className="space-y-2">
+                  <div className="px-3 py-2 text-sm text-gray-700">
+                    Hi, {user?.name}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </div>
+              ) : (
                 <Button
                   variant="ghost"
                   className="w-full justify-start"

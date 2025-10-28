@@ -254,6 +254,29 @@ class ApiService {
     return this.request<ApiResponse>(`/orders/admin/all${queryString ? `?${queryString}` : ''}`);
   }
 
+  // Wishlist methods
+  async getWishlist() {
+    return this.request<ApiResponse>('/wishlist');
+  }
+
+  async addToWishlist(productId: string) {
+    return this.request<ApiResponse>(`/wishlist/add/${productId}`, {
+      method: 'POST',
+    });
+  }
+
+  async removeFromWishlist(productId: string) {
+    return this.request<ApiResponse>(`/wishlist/remove/${productId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async clearWishlist() {
+    return this.request<ApiResponse>('/wishlist/clear', {
+      method: 'DELETE',
+    });
+  }
+
   // Utility methods
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');

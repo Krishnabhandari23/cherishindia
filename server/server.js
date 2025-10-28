@@ -11,6 +11,7 @@ dotenv.config();
 const authRoutes = require('./src/routes/auth');
 const productRoutes = require('./src/routes/products');
 const orderRoutes = require('./src/routes/orders');
+const wishlistRoutes = require('./src/routes/wishlist');
 
 const app = express();
 
@@ -127,6 +128,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // Health check endpoint
 app.get('/api/health', async (req, res) => {

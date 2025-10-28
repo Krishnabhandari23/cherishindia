@@ -3,12 +3,14 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Star, ShoppingCart, ArrowRight, Zap, Shield, Truck } from 'lucide-react';
+import { Star, ShoppingCart, ArrowRight, Zap, Shield, Truck, Heart } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
 import { addToCart } from '@/store/cartSlice';
 import { setFilters, fetchProducts, fetchFeaturedProducts } from '@/store/productSlice';
+import { addToWishlist, removeFromWishlist, fetchWishlist, addToWishlistLocal, removeFromWishlistLocal } from '@/store/wishlistSlice';
 import { CATEGORIES } from '@/utils/constants';
+import { toast } from 'sonner';
 // Using Product interface from productSlice instead of types/product
 
 // Define Product type to match the productSlice
@@ -37,13 +39,19 @@ interface HomeProps {
 export default function Home({ onNavigate }: HomeProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { products, featuredProducts, isLoading } = useSelector((state: RootState) => state.products);
+  const { products: wishlistProducts } = useSelector((state: RootState) => state.wishlist);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   
   useEffect(() => {
     // Fetch featured products for homepage
     dispatch(fetchFeaturedProducts(4));
     // Also fetch all products for categories section
     dispatch(fetchProducts({}));
-  }, [dispatch]);
+    // Fetch wishlist if user is authenticated
+    if (isAuthenticated) {
+      dispatch(fetchWishlist());
+    }
+  }, [dispatch, isAuthenticated]);
 
   // Use featured products from state, fallback to first 4 products if none are featured
   const displayProducts = featuredProducts.length > 0 ? featuredProducts : products.slice(0, 4);
@@ -55,6 +63,46 @@ export default function Home({ onNavigate }: HomeProps) {
       price: product.price,
       image: product.image,
     }));
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const isInWishlist = (productId: string) => {
+    return wishlistProducts.some(item => item.product._id === productId);
+  };
+
+  const handleWishlistToggle = async (product: Product) => {
+    if (!isAuthenticated) {
+      onNavigate('login');
+      return;
+    }
+
+    try {
+      if (isInWishlist(product._id)) {
+        const result = await dispatch(removeFromWishlist(product._id));
+        // If API failed, use local action
+        if (removeFromWishlist.rejected.match(result)) {
+          dispatch(removeFromWishlistLocal(product._id));
+        }
+        toast.success(`${product.name} removed from wishlist`);
+      } else {
+        const result = await dispatch(addToWishlist(product._id));
+        // If API failed, use local action
+        if (addToWishlist.rejected.match(result)) {
+          dispatch(addToWishlistLocal(product));
+        }
+        toast.success(`${product.name} added to wishlist`);
+      }
+    } catch (error) {
+      console.error('Wishlist error:', error);
+      // Fallback to local actions
+      if (isInWishlist(product._id)) {
+        dispatch(removeFromWishlistLocal(product._id));
+        toast.success(`${product.name} removed from wishlist`);
+      } else {
+        dispatch(addToWishlistLocal(product));
+        toast.success(`${product.name} added to wishlist`);
+      }
+    }
   };
 
   const handleCategoryClick = (category: string) => {
@@ -257,6 +305,23 @@ export default function Home({ onNavigate }: HomeProps) {
                         -{product.discount}%
                       </Badge>
                     )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="absolute top-2 right-2 h-8 w-8 p-0 bg-white/80 hover:bg-white"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleWishlistToggle(product);
+                      }}
+                    >
+                      <Heart 
+                        className={`h-4 w-4 ${
+                          isInWishlist(product._id) 
+                            ? 'fill-red-500 text-red-500' 
+                            : 'text-gray-600'
+                        }`} 
+                      />
+                    </Button>
                   </div>
                   <CardContent className="p-4">
                     <h3 

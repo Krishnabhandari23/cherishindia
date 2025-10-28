@@ -33,6 +33,8 @@ const cartSlice = createSlice({
       }
       cartSlice.caseReducers.calculateTotal(state);
       localStorage.setItem('cart', JSON.stringify(state.items));
+      // Automatically show cart when item is added
+      state.isOpen = true;
     },
     removeFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter(item => item.id !== action.payload);
@@ -58,11 +60,17 @@ const cartSlice = createSlice({
     toggleCart: (state) => {
       state.isOpen = !state.isOpen;
     },
+    showCart: (state) => {
+      state.isOpen = true;
+    },
+    hideCart: (state) => {
+      state.isOpen = false;
+    },
     calculateTotal: (state) => {
       state.total = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart, toggleCart, calculateTotal } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, clearCart, toggleCart, showCart, hideCart, calculateTotal } = cartSlice.actions;
 export default cartSlice.reducer;

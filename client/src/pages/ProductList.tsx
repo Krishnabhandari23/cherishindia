@@ -4,12 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Star, ShoppingCart, Filter } from 'lucide-react';
+import { Star, ShoppingCart, Filter, Heart } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
 import { addToCart } from '@/store/cartSlice';
 import { setFilters } from '@/store/productSlice';
+import { addToWishlist, removeFromWishlist, fetchWishlist, addToWishlistLocal, removeFromWishlistLocal } from '@/store/wishlistSlice';
 import { CATEGORIES } from '@/utils/constants';
+import { toast } from 'sonner';
 
 // Define Product type to match the productSlice
 type Product = {
@@ -37,6 +39,8 @@ interface ProductListProps {
 export default function ProductList({ onNavigate }: ProductListProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { products, filters } = useSelector((state: RootState) => state.products);
+  const { products: wishlistProducts } = useSelector((state: RootState) => state.wishlist);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [sortBy, setSortBy] = useState('name');
 
   const handleAddToCart = (product: Product) => {
@@ -46,6 +50,46 @@ export default function ProductList({ onNavigate }: ProductListProps) {
       price: product.price,
       image: product.image,
     }));
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const isInWishlist = (productId: string) => {
+    return wishlistProducts.some(item => item.product._id === productId);
+  };
+
+  const handleWishlistToggle = async (product: Product) => {
+    if (!isAuthenticated) {
+      onNavigate('login');
+      return;
+    }
+
+    try {
+      if (isInWishlist(product._id)) {
+        const result = await dispatch(removeFromWishlist(product._id));
+        // If API failed, use local action
+        if (removeFromWishlist.rejected.match(result)) {
+          dispatch(removeFromWishlistLocal(product._id));
+        }
+        toast.success(`${product.name} removed from wishlist`);
+      } else {
+        const result = await dispatch(addToWishlist(product._id));
+        // If API failed, use local action
+        if (addToWishlist.rejected.match(result)) {
+          dispatch(addToWishlistLocal(product));
+        }
+        toast.success(`${product.name} added to wishlist`);
+      }
+    } catch (error) {
+      console.error('Wishlist error:', error);
+      // Fallback to local actions
+      if (isInWishlist(product._id)) {
+        dispatch(removeFromWishlistLocal(product._id));
+        toast.success(`${product.name} removed from wishlist`);
+      } else {
+        dispatch(addToWishlistLocal(product));
+        toast.success(`${product.name} added to wishlist`);
+      }
+    }
   };
 
   const handleCategoryChange = (category: string) => {
@@ -174,6 +218,23 @@ export default function ProductList({ onNavigate }: ProductListProps) {
                         -{product.discount}%
                       </Badge>
                     )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="absolute top-2 right-2 h-8 w-8 p-0 bg-white/80 hover:bg-white"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleWishlistToggle(product);
+                      }}
+                    >
+                      <Heart 
+                        className={`h-4 w-4 ${
+                          isInWishlist(product._id) 
+                            ? 'fill-red-500 text-red-500' 
+                            : 'text-gray-600'
+                        }`} 
+                      />
+                    </Button>
                     {product.stock === 0 && (
                       <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                         <Badge variant="destructive">Out of Stock</Badge>

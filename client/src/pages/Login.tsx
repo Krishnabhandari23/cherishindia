@@ -18,6 +18,8 @@ interface LoginProps {
 export default function Login({ onNavigate }: LoginProps) {
   const dispatch = useDispatch<AppDispatch>();
   const [showPassword, setShowPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loginForm, setLoginForm] = useState({
     email: '',
     password: ''
@@ -238,13 +240,26 @@ export default function Login({ onNavigate }: LoginProps) {
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                       <Input
                         id="register-password"
-                        type="password"
+                        type={showRegisterPassword ? "text" : "password"}
                         placeholder="Create a password"
                         value={registerForm.password}
                         onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
-                        className="pl-10"
+                        className="pl-10 pr-10"
                         required
                       />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                      >
+                        {showRegisterPassword ? (
+                          <EyeOff className="h-4 w-4 text-gray-400" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-400" />
+                        )}
+                      </Button>
                     </div>
                   </div>
 
@@ -254,13 +269,26 @@ export default function Login({ onNavigate }: LoginProps) {
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                       <Input
                         id="confirm-password"
-                        type="password"
+                        type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirm your password"
                         value={registerForm.confirmPassword}
                         onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
-                        className="pl-10"
+                        className="pl-10 pr-10"
                         required
                       />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="h-4 w-4 text-gray-400" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-400" />
+                        )}
+                      </Button>
                     </div>
                   </div>
 
